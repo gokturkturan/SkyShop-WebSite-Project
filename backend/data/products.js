@@ -1,6 +1,5 @@
 const products = [
   {
-    _id: "1",
     name: "iPhone 14 Pro Max 256GB ",
     image: "/images/iPhone14PM256.jpg",
     description:
@@ -13,7 +12,6 @@ const products = [
     numReviews: 8,
   },
   {
-    _id: "2",
     name: "iPhone 13 Pro Max 256GB ",
     image: "/images/iPhone13PM256.jpg",
     description:
