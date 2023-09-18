@@ -119,7 +119,7 @@ const Cart = () => {
                 <Col>Ürünün Toplamı:</Col>
                 <Col>
                   <span style={{ color: "black", fontWeight: "600" }}>
-                    {itemsPrice} TL
+                    {itemsPrice ? itemsPrice : "0.00"} TL
                   </span>
                 </Col>
               </Row>
@@ -143,7 +143,7 @@ const Cart = () => {
                 <Col>Toplam Sepet:</Col>
                 <Col>
                   <span style={{ color: "orange", fontWeight: "600" }}>
-                    {itemsPrice} TL
+                    {itemsPrice ? itemsPrice : "0.00"} TL
                   </span>
                 </Col>
               </Row>
