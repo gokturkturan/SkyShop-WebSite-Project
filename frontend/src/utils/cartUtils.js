@@ -9,6 +9,9 @@ export const updateCart = (state) => {
 
   // over 1000TL is free, else 150TL
   state.shippingPrice = addDecimals(state.itemsPrice > 1000 ? 0 : 150);
+  if (state.cartItems.length === 0) {
+    state.shippingPrice = addDecimals(0);
+  }
 
   state.totalPrice = (
     Number(state.itemsPrice) + Number(state.shippingPrice)

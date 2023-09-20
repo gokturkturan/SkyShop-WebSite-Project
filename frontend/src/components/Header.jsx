@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { clearCredentials } from "../slices/authSlice";
-import { clearCart } from "../slices/cartSlice";
+import { resetCart } from "../slices/cartSlice";
 import logo from "../assets/sky.png";
 
 const Header = () => {
@@ -21,7 +21,7 @@ const Header = () => {
   const logoutHandler = async () => {
     try {
       await logout().unwrap();
-      dispatch(clearCart());
+      dispatch(resetCart());
       dispatch(clearCredentials());
       navigate("/login");
     } catch (error) {

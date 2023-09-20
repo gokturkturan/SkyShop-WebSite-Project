@@ -96,7 +96,7 @@ const updateProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get All Users for Admin
-// @route   GET /api/users/all
+// @route   GET /api/users
 const getAllUsers = asyncHandler(async (req, res) => {
   res.send("getAllUsers");
 });

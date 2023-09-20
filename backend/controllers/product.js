@@ -3,7 +3,7 @@ import Product from "../models/product.js";
 
 // @desc Fetch all products
 // @route GET /api/products
-const getProducts = asyncHandler(async (req, res) => {
+const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find();
   res.json(products);
 });
@@ -20,5 +20,5 @@ const getProduct = asyncHandler(async (req, res) => {
   res.json(product);
 });
 
-const productController = { getProducts, getProduct };
+const productController = { getAllProducts, getProduct };
 export default productController;

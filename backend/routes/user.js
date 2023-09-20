@@ -4,7 +4,7 @@ import { isAuth, isAdmin } from "../middleware/authHandler.js";
 
 const router = express.Router();
 
-router.get("/all", isAuth, isAdmin, userController.getAllUsers);
+router.get("/", isAuth, isAdmin, userController.getAllUsers);
 router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.post("/logout", isAuth, userController.logout);
