@@ -9,7 +9,7 @@ const register = asyncHandler(async (req, res) => {
   const isUserRegistered = await User.findOne({ email });
   if (isUserRegistered) {
     res.status(400);
-    throw new Error("User is already registered.");
+    throw new Error("Bu e-posta adresi kullanılmaktadır.");
   }
 
   const user = await User.create({ name, email, password });
@@ -24,7 +24,7 @@ const register = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(400);
-    throw new Error("Invalid data.");
+    throw new Error("Kayıt gerçekleştirilemedi.");
   }
 });
 
@@ -44,7 +44,7 @@ const login = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401);
-    throw new Error("Invalid email or password.");
+    throw new Error("E-posta ya da Şifre hatalı.");
   }
 });
 
@@ -52,7 +52,7 @@ const login = asyncHandler(async (req, res) => {
 // @route   POST /api/users/logout
 const logout = (req, res) => {
   res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
-  res.status(200).json({ message: "Logged out." });
+  res.status(200).json({ message: "Çıkış yapıldı." });
 };
 
 // @desc    Get User Profile
@@ -68,7 +68,7 @@ const getProfile = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    throw new Error("User not found.");
+    throw new Error("Kullanıcı bulunamadı");
   }
 });
 
@@ -91,7 +91,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    throw new Error("User not found");
+    throw new Error("Kullanıcı bulunamadı.");
   }
 });
 

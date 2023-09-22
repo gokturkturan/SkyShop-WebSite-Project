@@ -15,7 +15,7 @@ const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(productId);
   if (!product) {
     res.status(404);
-    throw new Error("Product not Found");
+    throw new Error("Ürün bulunamadı.");
   }
   res.json(product);
 });
