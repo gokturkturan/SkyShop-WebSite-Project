@@ -53,7 +53,7 @@ const getOrder = asyncHandler(async (req, res) => {
   if (order) {
     res.status(200).json(order);
   } else {
-    res.status(400);
+    res.status(404);
     throw new Error("Sipariş bulunamadı.");
   }
 });
@@ -74,21 +74,32 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
     res.status(200).json(updatedOrder);
   } else {
-    res.status(400);
+    res.status(404);
     throw new Error("Sipariş bulunamadı.");
   }
 });
 
 // @desc Update Order to Delivered for Admin
-// @route PUT /api/orders/:id/delivered
+// @route PUT /api/orders/:id/deliver
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-  res.send("updateOrderToDelivered");
+  const orderId = req.params.id;
+  const order = await Order.findById(orderId);
+  if (order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+    const updatedOrder = await order.save();
+    res.status(200).json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Sipariş bulunamadı.");
+  }
 });
 
 // @desc Get All Orders for Admin
 // @route GET /api/orders
 const getAllOrders = asyncHandler(async (req, res) => {
-  res.send("getAllOrders");
+  const orders = await Order.find().populate("user", "id name");
+  res.status(200).json(orders);
 });
 
 const orderController = {

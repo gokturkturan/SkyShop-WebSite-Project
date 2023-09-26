@@ -19,11 +19,14 @@ const Home = () => {
         <>
           <h1>En Yeni Ürünler</h1>
           <Row>
-            {products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} />
-              </Col>
-            ))}
+            {products.map(
+              (product) =>
+                product.name !== "Ürün" && (
+                  <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                    <Product product={product} />
+                  </Col>
+                )
+            )}
           </Row>
         </>
       )}

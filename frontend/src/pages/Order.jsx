@@ -9,7 +9,9 @@ import {
   useGetOrderQuery,
   useGetPaypalClientQuery,
   useUpdateOrderToPaidMutation,
+  useUpdateOrderToDeliveredMutation,
 } from "../slices/ordersApiSlice";
+import { useSelector } from "react-redux";
 
 const Order = () => {
   const { id: orderId } = useParams();
@@ -20,6 +22,8 @@ const Order = () => {
     isError,
   } = useGetOrderQuery(orderId);
 
+  const { userInfo } = useSelector((state) => state.user);
+
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
   const {
@@ -29,6 +33,8 @@ const Order = () => {
   } = useGetPaypalClientQuery();
 
   const [payOrder, { isLoading: loadingPay }] = useUpdateOrderToPaidMutation();
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useUpdateOrderToDeliveredMutation();
 
   useEffect(() => {
     if (!clientError && !clientLoading && client.id) {
@@ -78,6 +84,16 @@ const Order = () => {
         return orderId;
       });
   }
+
+  const deliverOrderHandler = async () => {
+    try {
+      await deliverOrder(orderId);
+      refetch();
+      toast.success("Sipariş teslim edildi.");
+    } catch (error) {
+      toast.error(error?.data?.message || error.message);
+    }
+  };
 
   return isLoading ? (
     <Loader />
@@ -196,6 +212,21 @@ const Order = () => {
                   )}
                 </ListGroup.Item>
               )}
+              {loadingDeliver && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverOrderHandler}
+                    >
+                      Teslim Edildi Olarak İşaretle
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

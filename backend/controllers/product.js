@@ -9,7 +9,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
 });
 
 // @desc Fetch a product
-// @route GET /api/product/:id
+// @route GET /api/products/:id
 const getProduct = asyncHandler(async (req, res) => {
   const productId = req.params.id;
   const product = await Product.findById(productId);
@@ -20,5 +20,24 @@ const getProduct = asyncHandler(async (req, res) => {
   res.json(product);
 });
 
-const productController = { getAllProducts, getProduct };
+// @desc Create a product for Admin
+// @route POST /api/products/
+const createProduct = asyncHandler(async (req, res) => {
+  const product = new Product({
+    name: "Ürün",
+    price: 0,
+    user: req.user._id,
+    image: "/images/sample.jpg",
+    brand: "Marka",
+    category: "Kategori",
+    countInStock: 0,
+    numReviews: 0,
+    description: "Açıklama",
+  });
+
+  const createdProduct = await product.save();
+  res.status(201).json(createdProduct);
+});
+
+const productController = { getAllProducts, getProduct, createProduct };
 export default productController;
