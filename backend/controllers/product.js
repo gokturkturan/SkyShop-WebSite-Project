@@ -39,5 +39,36 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct);
 });
 
-const productController = { getAllProducts, getProduct, createProduct };
+// @desc Edit a product for Admin
+// @route PUT /api/products/:id
+const editProduct = asyncHandler(async (req, res) => {
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
+  const prodId = req.params.id;
+
+  const product = await Product.findById(prodId);
+
+  if (product) {
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.image = image;
+    product.brand = brand;
+    product.category = category;
+    product.countInStock = countInStock;
+
+    const updatedProduct = await product.save();
+    res.status(201).json(updatedProduct);
+  } else {
+    res.status(404);
+    throw new Error("Ürün bulunamadı.");
+  }
+});
+
+const productController = {
+  getAllProducts,
+  getProduct,
+  createProduct,
+  editProduct,
+};
 export default productController;

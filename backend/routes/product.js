@@ -8,6 +8,9 @@ router
   .route("/")
   .get(productController.getAllProducts)
   .post(isAuth, isAdmin, productController.createProduct);
-router.get("/:id", productController.getProduct);
+router
+  .route("/:id")
+  .get(productController.getProduct)
+  .put(isAuth, isAdmin, productController.editProduct);
 
 export default router;
