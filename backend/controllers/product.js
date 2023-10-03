@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/product.js";
 
@@ -49,6 +51,10 @@ const editProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(prodId);
 
   if (product) {
+    if (image !== product.image) {
+      clearImage(product.image);
+    }
+
     product.name = name;
     product.price = price;
     product.description = description;
@@ -65,10 +71,31 @@ const editProduct = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete a product for Admin
+// @route DELETE /api/products/:id
+const deleteProduct = asyncHandler(async (req, res) => {
+  const prodId = req.params.id;
+  const product = await Product.findById(prodId);
+  if (product) {
+    await Product.deleteOne({ _id: product._id });
+    res.status(200).json({ message: "Ürün başarıyla silindi." });
+  } else {
+    res.status(404);
+    throw new Error("Ürün bulunamadı.");
+  }
+});
+
+const clearImage = (filePath) => {
+  const __dirname = path.resolve();
+  filePath = path.join(__dirname, filePath);
+  fs.unlink(filePath, (err) => console.log(err));
+};
+
 const productController = {
   getAllProducts,
   getProduct,
   createProduct,
   editProduct,
+  deleteProduct,
 };
 export default productController;

@@ -11,6 +11,7 @@ router
 router
   .route("/:id")
   .get(productController.getProduct)
-  .put(isAuth, isAdmin, productController.editProduct);
+  .put(isAuth, isAdmin, productController.editProduct)
+  .delete(isAuth, isAdmin, productController.deleteProduct);
 
 export default router;

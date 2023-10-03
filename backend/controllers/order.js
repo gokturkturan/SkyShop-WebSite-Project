@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/order.js";
+import Product from "../models/product.js";
 
 // @desc Create New Order
 // @route POST /api/orders
@@ -29,6 +30,11 @@ const createOrder = asyncHandler(async (req, res) => {
       itemsPrice,
       shippingPrice,
       totalPrice,
+    });
+    orderItems.map(async (i) => {
+      const product = await Product.findById(i._id);
+      product.countInStock = product.countInStock - i.qty;
+      await product.save();
     });
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);

@@ -7,25 +7,36 @@ import { toast } from "react-toastify";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
+  useDeleteProductMutation,
 } from "../../slices/productsApiSlice";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 
 const ProductList = () => {
   const navigate = useNavigate();
-  const { data: products, isLoading, isError } = useGetProductsQuery();
+  const { data: products, isLoading, refetch, isError } = useGetProductsQuery();
   const [createProduct, { isLoading: createProductLoading }] =
     useCreateProductMutation();
+  const [deleteProduct, { isLoading: deleteProductLoading }] =
+    useDeleteProductMutation();
 
-  const deleteProductHandler = (productId) => {
-    console.log("asd");
+  const deleteProductHandler = async (productId) => {
+    if (window.confirm("Bir ürünü silmek üzeresiniz!")) {
+      try {
+        await deleteProduct(productId);
+        refetch();
+        toast.success("Ürün başarıyla silindi.");
+      } catch (error) {
+        toast.error(error?.data?.message || error.error);
+      }
+    }
   };
 
   const createProductHandler = async () => {
     if (window.confirm("Yeni bir ürün oluşturmak üzeresiniz!")) {
       try {
         const { data } = await createProduct();
-        navigate(`/admin/product/${data._id}/edit`);
+        navigate(`/admin/editProduct/${data._id}`);
       } catch (error) {
         toast.error(error?.data?.message || error.error);
       }
@@ -45,6 +56,9 @@ const ProductList = () => {
           </Button>
         </Col>
       </Row>
+
+      {createProductLoading && <Loader />}
+      {deleteProductLoading && <Loader />}
       {isLoading ? (
         <Loader />
       ) : isError ? (

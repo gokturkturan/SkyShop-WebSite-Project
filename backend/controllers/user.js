@@ -98,25 +98,64 @@ const updateProfile = asyncHandler(async (req, res) => {
 // @desc    Get All Users for Admin
 // @route   GET /api/users
 const getAllUsers = asyncHandler(async (req, res) => {
-  res.send("getAllUsers");
+  const users = await User.find({});
+  res.status(200).json(users);
 });
 
 // @desc    Delete User for Admin
 // @route   DELETE /api/users/:id
 const deleteUser = asyncHandler(async (req, res) => {
-  res.send("deleteUser");
+  const userId = req.params.id;
+  const user = await User.findById(userId).select("-password");
+
+  if (user) {
+    if (user.isAdmin) {
+      res.status(404);
+      throw new Error("Admin rolündeki kullanıcılar silinemez.");
+    }
+    await User.deleteOne({ _id: user._id });
+    res
+      .status(200)
+      .json({ message: "Kullanıcı başarılı bir şekilde silindi." });
+  } else {
+    res.status(404);
+    throw new Error("Kullanıcı bulunamadı.");
+  }
 });
 
 // @desc    Get User for Admin
 // @route   GET /api/users/:id
 const getUser = asyncHandler(async (req, res) => {
-  res.send("getUser");
+  const userId = req.params.id;
+  const user = await User.findById(userId).select("-password");
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error("Kullanıcı bulunamadı.");
+  }
 });
 
 // @desc    Update User for Admin
 // @route   PUT /api/users/:id
 const updateUser = asyncHandler(async (req, res) => {
-  res.send("updateUser");
+  const userId = req.params.id;
+  const user = await User.findById(userId);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = Boolean(req.body.isAdmin);
+    const updatedUser = await user.save();
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Kullanıcı bulunamadı.");
+  }
 });
 
 const userController = {
