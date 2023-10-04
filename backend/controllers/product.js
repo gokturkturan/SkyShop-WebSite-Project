@@ -7,7 +7,7 @@ import Product from "../models/product.js";
 // @route GET /api/products
 const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find();
-  res.json(products);
+  res.status(200).json(products);
 });
 
 // @desc Fetch a product
@@ -19,7 +19,7 @@ const getProduct = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Ürün bulunamadı.");
   }
-  res.json(product);
+  res.status(200).json(product);
 });
 
 // @desc Create a product for Admin
@@ -85,6 +85,39 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Send a review
+// @route POST /api/products/:id/reviews
+const sendProductReview = asyncHandler(async (req, res) => {
+  const prodId = req.params.id;
+  const { rating, comment } = req.body;
+  const product = await Product.findById(prodId);
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (review) => review.user.toString() === req.user._id.toString()
+    );
+    if (alreadyReviewed) {
+      res.status(404);
+      throw new Error("Bu ürün zaten değerlendirilmiş.");
+    }
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+    product.rating =
+      product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+      product.reviews.length;
+    await product.save();
+    res.status(200).json({ message: "Ürün başarıyla değerlendirildi." });
+  } else {
+    res.status(404);
+    throw new Error("Ürün bulunamadı.");
+  }
+});
+
 const clearImage = (filePath) => {
   const __dirname = path.resolve();
   filePath = path.join(__dirname, filePath);
@@ -97,5 +130,6 @@ const productController = {
   createProduct,
   editProduct,
   deleteProduct,
+  sendProductReview,
 };
 export default productController;

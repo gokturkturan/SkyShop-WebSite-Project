@@ -14,4 +14,6 @@ router
   .put(isAuth, isAdmin, productController.editProduct)
   .delete(isAuth, isAdmin, productController.deleteProduct);
 
+router.route("/:id/reviews").post(isAuth, productController.sendProductReview);
+
 export default router;
