@@ -6,8 +6,17 @@ import Product from "../models/product.js";
 // @desc Fetch all products
 // @route GET /api/products
 const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
-  res.status(200).json(products);
+  const perPage = 4;
+  const pageNumber = Number(req.query.pageNumber) || 1;
+  const totalProductNumber = await Product.countDocuments();
+  const products = await Product.find()
+    .skip((pageNumber - 1) * perPage)
+    .limit(perPage);
+  res.status(200).json({
+    products,
+    page: pageNumber,
+    numberOfPage: Math.ceil(totalProductNumber / perPage),
+  });
 });
 
 // @desc Fetch a product
