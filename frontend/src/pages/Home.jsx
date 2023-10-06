@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -8,11 +8,19 @@ import { useGetProductsQuery } from "../slices/productsApiSlice";
 import Paginate from "../components/Paginate";
 
 const Home = () => {
-  const { pageNumber } = useParams();
-  const { data, isLoading, isError } = useGetProductsQuery(pageNumber);
+  const { pageNumber, keyword } = useParams();
+  const { data, isLoading, isError } = useGetProductsQuery({
+    pageNumber,
+    keyword,
+  });
 
   return (
     <>
+      {keyword && (
+        <Link to={"/"} className="btn btn-light mb-2">
+          Geri
+        </Link>
+      )}
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -32,7 +40,11 @@ const Home = () => {
                 )
             )}
           </Row>
-          <Paginate numberOfPage={data.numberOfPage} page={data.page} />
+          <Paginate
+            numberOfPage={data.numberOfPage}
+            page={data.page}
+            keyword={keyword ? keyword : ""}
+          />
         </>
       )}
     </>

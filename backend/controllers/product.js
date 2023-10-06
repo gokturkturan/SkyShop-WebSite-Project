@@ -8,8 +8,13 @@ import Product from "../models/product.js";
 const getAllProducts = asyncHandler(async (req, res) => {
   const perPage = 4;
   const pageNumber = Number(req.query.pageNumber) || 1;
-  const totalProductNumber = await Product.countDocuments();
-  const products = await Product.find()
+
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: "i" } }
+    : {};
+
+  const totalProductNumber = await Product.countDocuments(keyword);
+  const products = await Product.find(keyword)
     .skip((pageNumber - 1) * perPage)
     .limit(perPage);
   res.status(200).json({
