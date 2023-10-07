@@ -17,7 +17,9 @@ const ProductList = () => {
   const navigate = useNavigate();
   const { pageNumber } = useParams();
 
-  const { data, isLoading, refetch, isError } = useGetProductsQuery(pageNumber);
+  const { data, isLoading, refetch, isError } = useGetProductsQuery({
+    pageNumber,
+  });
   const [createProduct, { isLoading: createProductLoading }] =
     useCreateProductMutation();
   const [deleteProduct, { isLoading: deleteProductLoading }] =

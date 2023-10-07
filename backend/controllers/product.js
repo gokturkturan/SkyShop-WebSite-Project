@@ -132,6 +132,13 @@ const sendProductReview = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get Top Rated Products
+// @route GET /api/products/topProducts
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find().sort({ rating: -1 }).limit(3);
+  res.status(200).json(products);
+});
+
 const clearImage = (filePath) => {
   const __dirname = path.resolve();
   filePath = path.join(__dirname, filePath);
@@ -145,5 +152,6 @@ const productController = {
   editProduct,
   deleteProduct,
   sendProductReview,
+  getTopProducts,
 };
 export default productController;

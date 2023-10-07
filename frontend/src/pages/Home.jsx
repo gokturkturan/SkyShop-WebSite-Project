@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import ProductCarousel from "../components/ProductCarousel";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
 import Paginate from "../components/Paginate";
 
@@ -16,7 +17,9 @@ const Home = () => {
 
   return (
     <>
-      {keyword && (
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
         <Link to={"/"} className="btn btn-light mb-2">
           Geri
         </Link>
