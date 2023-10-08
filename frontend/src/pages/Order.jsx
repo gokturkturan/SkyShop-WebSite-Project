@@ -57,7 +57,7 @@ const Order = () => {
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
-        await payOrder({ orderId, details });
+        await payOrder({ orderId, details }).unwrap();
         refetch();
         toast.success("Ödeme başarılı.");
       } catch (error) {
@@ -75,6 +75,7 @@ const Order = () => {
   function onError(error) {
     toast.error(error.message);
   }
+
   function createOrder(data, actions) {
     return actions.order
       .create({
@@ -98,7 +99,7 @@ const Order = () => {
   return isLoading ? (
     <Loader />
   ) : isError ? (
-    <Message variant="danger" />
+    <Message variant="danger">{isError?.data?.error || isError.error}</Message>
   ) : (
     <>
       <h1>Sipariş {order._id}</h1>

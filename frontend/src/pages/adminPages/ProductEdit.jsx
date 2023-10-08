@@ -90,7 +90,9 @@ const ProductEdit = () => {
             {getProductLoading ? (
               <Loader />
             ) : getProductError ? (
-              <Message variant="danger">{getProductError}</Message>
+              <Message variant="danger">
+                {getProductError?.data?.error || getProductError.error}
+              </Message>
             ) : (
               <Form onSubmit={updateProductHandler}>
                 <Form.Group controlId="name" className="my-2">

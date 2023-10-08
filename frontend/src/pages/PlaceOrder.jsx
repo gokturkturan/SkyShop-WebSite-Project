@@ -138,7 +138,11 @@ const PlaceOrder = () => {
             {isLoading && <Loader />}
           </Card>
           <ListGroup.Item>
-            {error && <Message variant="danger">{error}</Message>}
+            {error && (
+              <Message variant="danger">
+                {error?.data?.error || error.error}
+              </Message>
+            )}
           </ListGroup.Item>
         </Col>
       </Row>
